@@ -193,6 +193,16 @@
         }
       }
     },
+    "set_on_level": {
+      "name": "Set on level",
+      "description": "Set on level.",
+      "fields": {
+        "entity_id": {
+          "name": "Entity",
+          "description": "Entity for INSTEON light"
+        }
+      }
+    },
     "scene_on": {
       "name": "Scene on",
       "description": "Triggers an INSTEON scene to turn ON.",

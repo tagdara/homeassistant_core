@@ -10,6 +10,7 @@
     "x10_all_lights_off": "mdi:lightbulb-off",
     "scene_on": "mdi:palette",
     "scene_off": "mdi:palette-outline",
-    "add_default_links": "mdi:link-variant-plus"
+    "add_default_links": "mdi:link-variant-plus",
+    "set_on_level": "mdi:palette-outline"
   }
 }

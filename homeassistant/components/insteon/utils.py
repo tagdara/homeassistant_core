@@ -12,6 +12,7 @@ from pyinsteon.address import Address
 from pyinsteon.constants import ALDBStatus, DeviceAction
 from pyinsteon.device_types.device_base import Device
 from pyinsteon.events import OFF_EVENT, OFF_FAST_EVENT, ON_EVENT, ON_FAST_EVENT, Event
+from pyinsteon.config import ON_LEVEL
 from pyinsteon.managers.link_manager import (
     async_enter_linking_mode,
     async_enter_unlinking_mode,
@@ -69,6 +70,8 @@ from .const import (
     SIGNAL_REMOVE_INSTEON_DEVICE,
     SIGNAL_REMOVE_X10_DEVICE,
     SIGNAL_SAVE_DEVICES,
+    SIGNAL_SET_ON_LEVEL,
+    SRV_ON_LEVEL,
     SRV_ADD_ALL_LINK,
     SRV_ADD_DEFAULT_LINKS,
     SRV_ALL_LINK_GROUP,
@@ -82,6 +85,7 @@ from .const import (
     SRV_PRINT_IM_ALDB,
     SRV_SCENE_OFF,
     SRV_SCENE_ON,
+    SRV_SET_ON_LEVEL,
     SRV_X10_ALL_LIGHTS_OFF,
     SRV_X10_ALL_LIGHTS_ON,
     SRV_X10_ALL_UNITS_OFF,
@@ -95,6 +99,7 @@ from .schemas import (
     PRINT_ALDB_SCHEMA,
     TRIGGER_SCENE_SCHEMA,
     X10_HOUSECODE_SCHEMA,
+    SET_ON_LEVEL_SCHEMA,
 )
 
 if TYPE_CHECKING:
@@ -252,6 +257,28 @@ def async_register_services(hass):  # noqa: C901
         housecode = service.data.get(SRV_HOUSECODE)
         await async_x10_all_lights_on(housecode)
 
+    async def async_srv_set_on_level(service: ServiceCall) -> None:
+        """Set On Level for Light"""
+        entity_id = service.data[CONF_ENTITY_ID]
+        level = service.data[SRV_ON_LEVEL]
+        signal = f"{entity_id}_{SIGNAL_SET_ON_LEVEL}"
+        _LOGGER.warning(f"made it to the setter - sending signal {signal} {level}")
+        async_dispatcher_send(hass, signal, level)
+
+        # _LOGGER.warning(f"made it to the setter with entity {entity_id}")
+        # #address = Address(entity_id)
+        # #_LOGGER.warning(f"xxxxxxx address {address}")
+        # _LOGGER.warning(f"xxxxxxx looking for device in {devices} {devices.__dict__}")        
+        # device = devices[entity_id]
+        # _LOGGER.warning(f"made it to the setter with entity {device}")
+
+        # await device.async_write_op_flags()
+        # await device.async_write_ext_properties()
+        # await device.async_read_op_flags()
+        # await device.async_read_ext_properties()
+
+        # await async_trigger_set_on_level(entity_id)
+
     async def async_srv_scene_on(service: ServiceCall) -> None:
         """Trigger an INSTEON scene ON."""
         group = service.data.get(SRV_ALL_LINK_GROUP)
@@ -364,6 +391,14 @@ def async_register_services(hass):  # noqa: C901
         DOMAIN, SRV_SCENE_OFF, async_srv_scene_off, schema=TRIGGER_SCENE_SCHEMA
     )
 
+    _LOGGER.warning(f"~~~~~~~~~~~~~~~~ registering set on level")
+    hass.services.async_register(
+        DOMAIN,
+        SRV_SET_ON_LEVEL,
+        async_srv_set_on_level,
+        schema=SET_ON_LEVEL_SCHEMA,
+    )
+
     hass.services.async_register(
         DOMAIN,
         SRV_ADD_DEFAULT_LINKS,
@@ -377,6 +412,7 @@ def async_register_services(hass):  # noqa: C901
     async_dispatcher_connect(
         hass, SIGNAL_REMOVE_DEVICE_OVERRIDE, async_remove_device_override
     )
+
     async_dispatcher_connect(hass, SIGNAL_ADD_X10_DEVICE, async_add_x10_device)
     async_dispatcher_connect(hass, SIGNAL_REMOVE_X10_DEVICE, async_remove_x10_device)
     async_dispatcher_connect(hass, SIGNAL_REMOVE_HA_DEVICE, async_remove_ha_device)

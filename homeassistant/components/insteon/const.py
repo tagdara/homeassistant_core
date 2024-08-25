@@ -69,6 +69,7 @@ CONF_X10 = "x10_devices"
 CONF_HOUSECODE = "housecode"
 CONF_UNITCODE = "unitcode"
 CONF_DIM_STEPS = "dim_steps"
+CONF_SET_ON_LEVEL = "set_on_level"
 CONF_X10_ALL_UNITS_OFF = "x10_all_units_off"
 CONF_X10_ALL_LIGHTS_ON = "x10_all_lights_on"
 CONF_X10_ALL_LIGHTS_OFF = "x10_all_lights_off"
@@ -76,6 +77,9 @@ CONF_DEV_PATH = "dev_path"
 
 PORT_HUB_V1 = 9761
 PORT_HUB_V2 = 25105
+
+SRV_SET_ON_LEVEL = "set_on_level"
+SRV_ON_LEVEL = "on_level"
 
 SRV_ADD_ALL_LINK = "add_all_link"
 SRV_DEL_ALL_LINK = "delete_all_link"
@@ -108,6 +112,7 @@ SIGNAL_REMOVE_ENTITY = "insteon_remove_entity"
 SIGNAL_ADD_X10_DEVICE = "insteon_add_x10_device"
 SIGNAL_REMOVE_X10_DEVICE = "insteon_remove_x10_device"
 SIGNAL_ADD_DEFAULT_LINKS = "add_default_links"
+SIGNAL_SET_ON_LEVEL = "set_on_level"
 
 HOUSECODES = [
     "a",

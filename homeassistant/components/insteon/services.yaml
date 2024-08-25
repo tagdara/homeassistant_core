@@ -125,6 +125,19 @@ scene_off:
         number:
           min: 0
           max: 255
+set_on_level:
+  fields:
+    entity_id:
+      required: true
+      example: "light.1a2b3c"
+      selector:
+        text:
+    on_level:
+      default: 255
+      selector:
+        number:
+          min: 0
+          max: 255
 add_default_links:
   fields:
     entity_id:

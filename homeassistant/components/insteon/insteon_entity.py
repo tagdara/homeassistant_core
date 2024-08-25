@@ -18,6 +18,7 @@ from .const import (
     SIGNAL_ADD_DEFAULT_LINKS,
     SIGNAL_LOAD_ALDB,
     SIGNAL_PRINT_ALDB,
+    SIGNAL_SET_ON_LEVEL,
     SIGNAL_REMOVE_ENTITY,
     SIGNAL_SAVE_DEVICES,
     STATE_NAME_LABEL_MAP,
@@ -124,6 +125,14 @@ class InsteonEntity(Entity):
         )
         print_signal = f"{self.entity_id}_{SIGNAL_PRINT_ALDB}"
         async_dispatcher_connect(self.hass, print_signal, self._print_aldb)
+
+        on_level_signal = f"{self.entity_id}_{SIGNAL_SET_ON_LEVEL}"
+        async_dispatcher_connect(
+            self.hass, 
+            on_level_signal, 
+            self._set_on_level
+        )
+
         default_links_signal = f"{self.entity_id}_{SIGNAL_ADD_DEFAULT_LINKS}"
         async_dispatcher_connect(
             self.hass, default_links_signal, self._async_add_default_links
@@ -156,6 +165,10 @@ class InsteonEntity(Entity):
     def _print_aldb(self):
         """Print the device ALDB to the log file."""
         print_aldb_to_log(self._insteon_device.aldb)
+
+    def _set_on_level(self, level):
+        """Set the on level of a device"""
+        _LOGGER.warning(f"On Level is Not available for this entity")
 
     def get_device_property(self, name: str):
         """Get a single Insteon device property value (raw)."""

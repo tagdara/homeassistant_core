@@ -1,6 +1,7 @@
 """Support for Insteon lights via PowerLinc Modem."""
 
 from typing import Any
+import logging
 
 from pyinsteon.config import ON_LEVEL
 from pyinsteon.device_types.device_base import Device as InsteonDevice
@@ -17,6 +18,8 @@ from .insteon_entity import InsteonEntity
 from .utils import async_add_insteon_devices, async_add_insteon_entities
 
 MAX_BRIGHTNESS = 255
+
+_LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(
@@ -70,13 +73,27 @@ class InsteonDimmerEntity(InsteonEntity, LightEntity):
         """Return the boolean response if the node is on."""
         return bool(self.brightness)
 
+    async def _set_on_level(self, level):
+        """Set the on level of a device"""
+        _LOGGER.debug(f"changing onlevel for {self.unique_id} from {self.on_level} to {level}")
+        self._insteon_device.properties[ON_LEVEL].new_value = int(level)
+        onlevel = self._insteon_device.properties[ON_LEVEL]
+        await self._insteon_device.async_write_ext_properties()
+        return int(level)
+
+    @property
+    def on_level(self):
+        """Return the on_level of this light between 0..255."""
+        return self.get_device_property(ON_LEVEL)
+
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn light on."""
         brightness: int | None = None
         if ATTR_BRIGHTNESS in kwargs:
             brightness = int(kwargs[ATTR_BRIGHTNESS])
         elif self._insteon_device_group.group == 1:
-            brightness = self.get_device_property(ON_LEVEL)
+            #brightness = self.get_device_property(ON_LEVEL)
+            brightness = self.on_level
         if brightness:
             await self._insteon_device.async_on(
                 on_level=brightness, group=self._insteon_device_group.group

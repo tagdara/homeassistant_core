@@ -34,6 +34,8 @@ from .const import (
     SRV_HOUSECODE,
     SRV_LOAD_DB_RELOAD,
     SRV_RESPONDER,
+    SRV_ON_LEVEL,
+    SRV_SET_ON_LEVEL,
     X10_PLATFORMS,
 )
 
@@ -59,6 +61,12 @@ LOAD_ALDB_SCHEMA = vol.Schema(
 
 
 PRINT_ALDB_SCHEMA = vol.Schema({vol.Required(CONF_ENTITY_ID): cv.entity_id})
+SET_ON_LEVEL_SCHEMA = vol.Schema(
+    {
+        vol.Required(CONF_ENTITY_ID): cv.entity_id,
+        vol.Optional(SRV_ON_LEVEL, default=255): vol.Range(min=0, max=255),
+    }
+)
 
 
 X10_HOUSECODE_SCHEMA = vol.Schema({vol.Required(SRV_HOUSECODE): vol.In(HOUSECODES)})

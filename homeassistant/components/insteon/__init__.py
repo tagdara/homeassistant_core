@@ -77,6 +77,8 @@ async def close_insteon_connection(*args):
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up an Insteon entry."""
 
+    _LOGGER.warning("~~~~~~~~~~~~~~~~ using custom code")
+
     if dev_path := entry.options.get(CONF_DEV_PATH):
         hass.data[DOMAIN] = {}
         hass.data[DOMAIN][CONF_DEV_PATH] = dev_path
